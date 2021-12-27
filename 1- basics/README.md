@@ -22,6 +22,50 @@ In here we take and learn about **VHDL**
 
 **VHDL** is a very big language with a lot of syntax that needs a good amount of time to master them, in here we will take about the basics to learn **VHDL** with examples to know the basics to build and understand yours or others **VHDL** programs and be able to design circuits.
 
+but, lets first take about **data types** in **VHDL**.
+
+## Data types In VHDL
+
+### BIT Data Type
+
+Supports the values of `0` and `1`.
+
+You may ask is there other data types than those in **VHDL** and what is there use case?
+
+Will yes, there are others like the following!
+
+### BOOLEAN Data Type
+
+Supports literals `FALSE` and `TRUE`.
+
+It is less frequently used so you may not see it a lot.
+
+### STD_LOGIC Data Type
+
+The most commonly used!
+
+TtIt is defined in the `std_logic_1164` package of `IEEE` library. It is defined as: (`U`, `X`, `O`, `I`, `Z`, `W`, `L`, `H`, `-`).
+
+- `U`: **Uninitialized**.
+
+- `X`: **Unknown**.
+
+- `0`: **Logic 0**.
+
+- `1`: **Logic 1**.
+
+- `Z`: **High impedance**. If you have a driver the current is going from `0` to `1` **high impedance** means there no current.
+
+- `W`: **Unknown**.
+
+- `L`: **Low logic 0**. Some value that is a little bit over 0 but not actually 0 like: with resect to 0 -> (0.3v, 0.4v).
+
+- `H`: **Low logic 1**. Something high like with respect to 3.3v -> (3v, 2.8v) or with respect to 5v -> (4.5v, 4.2v);
+
+- `-`: **Don't care**.
+
+> `U`, `X`, `W` and `-`: usually used for simulation, since they represent the behavioral of the modal itself rather than the behavioral of the hardware being synthesized.
+
 ## 5 types of design units **(VHDL)**
 
 There is 5 types of design units **(VHDL)** code:
@@ -36,7 +80,7 @@ There is 5 types of design units **(VHDL)** code:
 
 5. Package Body
 
-The two most commonly used are **Entity** and **Architecture**
+The two most commonly used are **Entity** and **Architecture**.
 
 ### What is an Entity in VHDL
 
@@ -98,7 +142,7 @@ Okay, what's going on here?
 
 If you see this for the first time you are probably puzzled, let's take it to step by step first to explain this code.
 
-#### 1- Library IEEE importing
+#### 1- Importing a library for STD_LOGIC
 
 ```vhdl
 library IEEE;
@@ -111,7 +155,7 @@ This is a library we import to use `STD_LOGIC` type form it.
 
 > We will explain more in the future :)
 
-#### 2- Entity declaration
+#### 2- Entity declaration and Modes
 
 ```vhdl
 entity Switch_LEDs is
@@ -126,7 +170,7 @@ end Switch_LEDs;
 
 lets take it part by part first:'
 
-In:
+_In:_
 
 ```vhdl
 entity Switch_LEDs is
@@ -138,7 +182,27 @@ end Switch_LEDs;
 
 - We end it with `end Switch_LEDs;`, we end the declaration with the same name we gave it.
 
-In:
+##### lets take a little about Modes in VHDL
+
+Mode is Signal in the port has a mode indicates the driver direction.
+
+It also indicate whether or not the port can read from within the entity,
+in example if the mode is of type `IN` then you can read _(take)_ it to a driver. On the other hand, if it's of the type `OUT` then you can't read but you can write _(give)_ it to a driver.
+
+Mode Types in **VHDL**:
+
+- **IN**: Values can be **read** but **not assigned**. Drivers outside the entity can give a value, but the drivers inside can only assign _(take)_.
+
+- **OUT**: Values can be **assigned** but **not read**. Drivers outside the entity can assign _(take)_ a value, but you **can't read _(give)_**.
+
+- **INOUT**: Bi-directional. Values can be read and assigned. So you can have a driver from the outside giving the signal and a driver from the inside reading the signal
+
+> **INOUT** mode is a little tricky (not straight forward) to implement.
+> Tho, you can use an individual **IN** and an individual **OUT** mode and in the **architecture** you make it of the type **INOUT**.
+
+- **BUFFER**
+
+_In:_
 
 ```vhdl
 entity Switch_LEDs is
@@ -163,13 +227,13 @@ entity Switch_LEDs is
 end Switch_LEDs;
 ```
 
-1. `switch_0: in STD_LOGIC;`: In here we say **the name of the port** is `switch_0` with **the port type** `in` **_input_**, and **the data type it will carry type** `STD_LOGIC`.
+1. `switch_0: in STD_LOGIC;`: In here we say **the name of the port** is `switch_0` with **the port mode** `in` **_input_**, and **the data type it will carry type** `STD_LOGIC`.
 
-2. `switch_1 : in STD_LOGIC;`: Similarly in here we say **the name of the port** is `switch_1` with **the port type** `in` **_input_**, and **the data type it will carry type** `STD_LOGIC`.
+2. `switch_1 : in STD_LOGIC;`: Similarly in here we say **the name of the port** is `switch_1` with **the port mode** `in` **_input_**, and **the data type it will carry type** `STD_LOGIC`.
 
-3. `LED_0 : in STD_LOGIC;`: In here we say **the name of the port** is `LED_0` with **the port type** `out` **_output_**, and **the data type it will carry type** `STD_LOGIC`.
+3. `LED_0 : in STD_LOGIC;`: In here we say **the name of the port** is `LED_0` with **the port mode** `out` **_output_**, and **the data type it will carry type** `STD_LOGIC`.
 
-4. `LED_1 : in STD_LOGIC;`: Similarly in here we say **the name of the port** is `LED_1` with **the port type** `out` **_output_**, and **the data type it will carry type** `STD_LOGIC`.
+4. `LED_1 : in STD_LOGIC;`: Similarly in here we say **the name of the port** is `LED_1` with **the port mode** `out` **_output_**, and **the data type it will carry type** `STD_LOGIC`.
 
 ### 3- Architecture declaration
 
@@ -183,7 +247,7 @@ architecture Behavioral of Switch_LEDs is
 
 Again take it step by step:
 
-In:
+_In:_
 
 ```vhdl
 architecture Behavioral of Switch_LEDs is
@@ -197,7 +261,7 @@ architecture Behavioral of Switch_LEDs is
 
 - The end it with `end Behavioral;`, again like when describing an **entity** we end the declaration with the same name we gave it.
 
-In:
+_In:_
 
 ```vhdl
 architecture Behavioral of Switch_LEDs is
